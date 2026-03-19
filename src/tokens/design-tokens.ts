@@ -97,6 +97,15 @@ export const tokens = {
     activeBg: '#DB2777' // pink-600 — left sidebar active icon background
   },
 
+  // ─── Exam accent (blue) ─────────────────────────────────────────────────────
+  exam: {
+    accent: '#2563EB', // blue-600 — current-question highlight, active icons
+    accentHover: '#1D4ED8', // blue-700 — hover on accent elements
+    accentLight: '#EFF6FF', // blue-50  — active tool background, tinted panels
+    accentBorder: '#BFDBFE', // blue-200 — border on accent-tinted surfaces
+    accentMid: '#3B82F6' // blue-500 — secondary accent uses
+  },
+
   // ─── Calculator ─────────────────────────────────────────────────────────────
   calc: {
     displayBg: '#111827', // gray-900
@@ -157,6 +166,13 @@ export const cssVars = `
   --state-flagged-border:  ${tokens.state.flaggedBorder};
   --state-flagged-text:    ${tokens.state.flaggedText};
   --state-current-bg:      ${tokens.state.currentBg};
+
+  /* Exam accent */
+  --exam-accent:        ${tokens.exam.accent};
+  --exam-accent-hover:  ${tokens.exam.accentHover};
+  --exam-accent-light:  ${tokens.exam.accentLight};
+  --exam-accent-border: ${tokens.exam.accentBorder};
+  --exam-accent-mid:    ${tokens.exam.accentMid};
 
   /* Semantic */
   --semantic-error-text:   ${tokens.semantic.errorText};

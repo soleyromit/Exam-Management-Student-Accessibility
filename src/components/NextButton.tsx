@@ -17,7 +17,6 @@ import React from 'react';
  *   text      → Text/Inverse (#FFFFFF)
  *   border    → Brand/Primary (#E4077D)
  */
-
 import { ChevronRightIcon } from 'lucide-react';
 import { tokens } from '../tokens/design-tokens';
 export interface NextButtonProps {
@@ -34,41 +33,33 @@ export function NextButton({
 }: NextButtonProps) {
   return (
     // Figma layer: "NextButton"
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={`
+    <button type="button" onClick={onClick} disabled={disabled} className={`
         inline-flex items-center justify-center
         font-heading font-semibold rounded-lg
         transition-all duration-150 select-none
         hover:opacity-90 active:opacity-80
         ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}
         ${className}
-      `}
-      style={{
-        height: '40px',
-        padding: '0 18px',
-        fontSize: '14px',
-        gap: '6px',
-        lineHeight: 1,
-        whiteSpace: 'nowrap',
-        backgroundColor: tokens.brand.primary,
-        color: tokens.text.inverse,
-        border: `1px solid ${tokens.brand.primary}`
-      }}>
-      
+      `} style={{
+      height: '40px',
+      padding: '0 18px',
+      fontSize: '14px',
+      gap: '6px',
+      lineHeight: 1,
+      whiteSpace: 'nowrap',
+      backgroundColor: tokens.brand.primary,
+      color: tokens.text.inverse,
+      border: `1px solid ${tokens.brand.primary}`
+    }}>
       {/* Figma layer: "Label" */}
       {label}
 
       {/* Figma layer: "TrailingIcon" */}
-      <ChevronRightIcon
-        style={{
-          width: '14px',
-          height: '14px',
-          flexShrink: 0
-        }} />
-      
+      <ChevronRightIcon style={{
+        width: '14px',
+        height: '14px',
+        flexShrink: 0
+      }} />
     </button>);
 
 }

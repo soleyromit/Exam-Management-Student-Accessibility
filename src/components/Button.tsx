@@ -24,7 +24,6 @@ import React from 'react';
  *   text on primary → Text/Inverse (#FFFFFF)
  *   text on secondary → Text/Secondary (#334155)
  */
-
 import { ChevronLeftIcon } from 'lucide-react';
 import { tokens } from '../tokens/design-tokens';
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -41,15 +40,12 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
 }
 // ─── Size scale ───────────────────────────────────────────────────────────────
-const SIZE: Record<
-  ButtonSize,
-  {
-    height: string;
-    px: string;
-    fontSize: string;
-    gap: string;
-  }> =
-{
+const SIZE: Record<ButtonSize, {
+  height: string;
+  px: string;
+  fontSize: string;
+  gap: string;
+}> = {
   sm: {
     height: '34px',
     px: '14px',
@@ -113,54 +109,40 @@ export function Button({
   const sz = SIZE[size];
   return (
     // Figma layer: "Button"
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`
+    <button type={type} onClick={onClick} disabled={disabled} className={`
         inline-flex items-center justify-center
         font-heading font-semibold rounded-lg
         transition-all duration-150 select-none cursor-pointer
         ${VARIANT_HOVER[variant]}
         ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}
         ${className}
-      `}
-      style={{
-        height: sz.height,
-        padding: `0 ${sz.px}`,
-        fontSize: sz.fontSize,
-        gap: sz.gap,
-        lineHeight: 1,
-        whiteSpace: 'nowrap',
-        ...VARIANT_STYLE[variant]
-      }}>
-      
+      `} style={{
+      height: sz.height,
+      padding: `0 ${sz.px}`,
+      fontSize: sz.fontSize,
+      gap: sz.gap,
+      lineHeight: 1,
+      whiteSpace: 'nowrap',
+      ...VARIANT_STYLE[variant]
+    }}>
       {/* Figma layer: "LeadingIcon" — present only when leadingIcon=true */}
-      {leadingIcon &&
-      <ChevronLeftIcon
-        style={{
-          width: '14px',
-          height: '14px',
-          flexShrink: 0
-        }} />
-
-      }
+      {leadingIcon && <ChevronLeftIcon style={{
+        width: '14px',
+        height: '14px',
+        flexShrink: 0
+      }} />}
 
       {/* Figma layer: "Label" */}
       {label}
 
       {/* Figma layer: "TrailingIcon" — present only when icon is passed */}
-      {icon && !leadingIcon &&
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexShrink: 0
-        }}>
-        
+      {icon && !leadingIcon && <span style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexShrink: 0
+      }}>
           {icon}
-        </span>
-      }
+        </span>}
     </button>);
 
 }

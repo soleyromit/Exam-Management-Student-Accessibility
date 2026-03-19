@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 interface UseTimerReturn {
+  totalSeconds: number;
   minutes: number;
   seconds: number;
   formatted: string;
@@ -37,5 +38,5 @@ export function useTimer(initialSeconds: number = 3600): UseTimerReturn {
   const pause = useCallback(() => setIsRunning(false), []);
   const resume = useCallback(() => setIsRunning(true), []);
 
-  return { minutes, seconds, formatted, isRunning, pause, resume };
+  return { totalSeconds, minutes, seconds, formatted, isRunning, pause, resume };
 }

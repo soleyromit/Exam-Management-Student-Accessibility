@@ -34,14 +34,15 @@ import React, { useState } from 'react';
  * TOKEN USAGE
  *   All values from tokens.calc.* in design-tokens.ts
  */
-
 import { XIcon } from 'lucide-react';
 import { tokens } from '../tokens/design-tokens';
 export interface CalculatorProps {
   onClose: () => void;
 }
 type CalcMode = 'standard' | 'scientific';
-export function Calculator({ onClose }: CalculatorProps) {
+export function Calculator({
+  onClose
+}: CalculatorProps) {
   const [display, setDisplay] = useState('0');
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
@@ -123,8 +124,7 @@ export function Calculator({ onClose }: CalculatorProps) {
     setResetNext(true);
   };
   // ─── Button style helpers (all from tokens.calc) ──────────────────────────
-  const btnBase =
-  'flex items-center justify-center rounded-lg text-sm font-semibold transition-colors';
+  const btnBase = 'flex items-center justify-center rounded-lg text-sm font-semibold transition-colors';
   const btnStyle = {
     num: {
       className: `${btnBase} hover:bg-gray-100`,
@@ -171,171 +171,112 @@ export function Calculator({ onClose }: CalculatorProps) {
 
 
 
-  }: {label: string;type: keyof typeof btnStyle;onClick: () => void;}) =>
-  <button
-    onClick={onClick}
-    className={btnStyle[type].className}
-    style={btnStyle[type].style}>
-    
+  }: {label: string;type: keyof typeof btnStyle;onClick: () => void;}) => <button onClick={onClick} className={btnStyle[type].className} style={btnStyle[type].style}>
       {label}
     </button>;
-
   return (
     // Figma layer: "Calculator"
     // ⚠️ Fixed positioned — document as floating overlay in Figma
-    <div
-      className="overflow-hidden"
-      style={{
-        position: 'fixed',
-        top: '80px',
-        right: '320px',
-        zIndex: 50,
-        width: '320px',
-        backgroundColor: tokens.surface.white,
-        border: `1px solid ${tokens.border.default}`,
-        borderRadius: '12px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
-      }}>
-      
+    <div className="overflow-hidden" style={{
+      position: 'fixed',
+      top: '80px',
+      right: '320px',
+      zIndex: 50,
+      width: '320px',
+      backgroundColor: tokens.surface.white,
+      border: `1px solid ${tokens.border.default}`,
+      borderRadius: '12px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
+    }}>
       {/* Figma layer: "Calc/Header" */}
-      <div
-        className="flex items-center justify-between"
-        style={{
-          padding: '12px 16px',
-          backgroundColor: tokens.calc.headerBg,
-          borderBottom: `1px solid ${tokens.border.default}`
-        }}>
-        
+      <div className="flex items-center justify-between" style={{
+        padding: '12px 16px',
+        backgroundColor: tokens.calc.headerBg,
+        borderBottom: `1px solid ${tokens.border.default}`
+      }}>
         {/* Figma layer: "ModeToggle" */}
-        <div
-          className="flex"
-          style={{
-            gap: '4px'
-          }}>
-          
+        <div className="flex" style={{
+          gap: '4px'
+        }}>
           {(['standard', 'scientific'] as CalcMode[]).map((m) =>
           // Figma layer: "ModeBtn/{m}" (variant: active | default)
-          <button
-            key={m}
-            onClick={() => setMode(m)}
-            className="font-semibold rounded-md transition-colors"
-            style={{
-              padding: '4px 12px',
-              fontSize: '12px',
-              backgroundColor:
-              mode === m ? tokens.calc.equalBtn : 'transparent',
-              color: mode === m ? tokens.text.inverse : tokens.text.subtle
-            }}>
-            
+          <button key={m} onClick={() => setMode(m)} className="font-semibold rounded-md transition-colors" style={{
+            padding: '4px 12px',
+            fontSize: '12px',
+            backgroundColor: mode === m ? tokens.calc.equalBtn : 'transparent',
+            color: mode === m ? tokens.text.inverse : tokens.text.subtle
+          }}>
               {m.charAt(0).toUpperCase() + m.slice(1)}
-            </button>
-          )}
+            </button>)}
         </div>
         {/* Figma layer: "CloseButton" */}
-        <button
-          onClick={onClose}
-          className="transition-colors hover:text-gray-600"
-          style={{
-            color: tokens.text.placeholder
-          }}>
-          
-          <XIcon
-            style={{
-              width: '16px',
-              height: '16px'
-            }} />
-          
+        <button onClick={onClose} className="transition-colors hover:text-gray-600" style={{
+          color: tokens.text.placeholder
+        }}>
+          <XIcon style={{
+            width: '16px',
+            height: '16px'
+          }} />
         </button>
       </div>
 
       {/* Figma layer: "Calc/Display"
-             ⚠️ DisplayValue is dynamic — use placeholder text in Figma */}
-      <div
-        style={{
-          padding: '16px',
-          backgroundColor: tokens.calc.displayBg,
-          textAlign: 'right'
+                     ⚠️ DisplayValue is dynamic — use placeholder text in Figma */}
+      <div style={{
+        padding: '16px',
+        backgroundColor: tokens.calc.displayBg,
+        textAlign: 'right'
+      }}>
+        <div style={{
+          height: '16px',
+          marginBottom: '4px',
+          fontSize: '12px',
+          color: tokens.text.placeholder,
+          fontFamily: 'monospace'
         }}>
-        
-        <div
-          style={{
-            height: '16px',
-            marginBottom: '4px',
-            fontSize: '12px',
-            color: tokens.text.placeholder,
-            fontFamily: 'monospace'
-          }}>
-          
-          {previousValue !== null && operation ?
-          `${previousValue} ${operation}` :
-          ''}
+          {previousValue !== null && operation ? `${previousValue} ${operation}` : ''}
         </div>
-        <div
-          style={{
-            fontSize: '30px',
-            fontWeight: 700,
-            color: tokens.text.inverse,
-            fontFamily: 'monospace',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
-          }}>
-          
+        <div style={{
+          fontSize: '30px',
+          fontWeight: 700,
+          color: tokens.text.inverse,
+          fontFamily: 'monospace',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
           {display}
         </div>
       </div>
 
       {/* Figma layer: "Calc/ScientificGrid" — visible only in scientific mode */}
-      {mode === 'scientific' &&
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '4px',
-          padding: '8px',
-          backgroundColor: tokens.surface.subtle,
-          borderBottom: `1px solid ${tokens.border.default}`
-        }}>
-        
-          {['sin', 'cos', 'tan', 'log', 'ln', '√', 'x²', 'π', 'e', '('].map(
-          (fn) =>
-          <Btn
-            key={fn}
-            label={fn}
-            type="sci"
-            onClick={() =>
-            fn === '(' ? handleNumber('(') : handleScientific(fn)
-            } />
-
-
-        )}
-        </div>
-      }
+      {mode === 'scientific' && <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 1fr)',
+        gap: '4px',
+        padding: '8px',
+        backgroundColor: tokens.surface.subtle,
+        borderBottom: `1px solid ${tokens.border.default}`
+      }}>
+          {['sin', 'cos', 'tan', 'log', 'ln', '√', 'x²', 'π', 'e', '('].map((fn) => <Btn key={fn} label={fn} type="sci" onClick={() => fn === '(' ? handleNumber('(') : handleScientific(fn)} />)}
+        </div>}
 
       {/* Figma layer: "Calc/StandardGrid" */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '6px',
-          padding: '12px'
-        }}>
-        
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '6px',
+        padding: '12px'
+      }}>
         <Btn label="%" type="op" onClick={handlePercent} />
         <Btn label="CE" type="op" onClick={handleClearEntry} />
         <Btn label="C" type="op" onClick={handleClear} />
         <Btn label="÷" type="op" onClick={() => handleOperation('÷')} />
-        {['7', '8', '9'].map((n) =>
-        <Btn key={n} label={n} type="num" onClick={() => handleNumber(n)} />
-        )}
+        {['7', '8', '9'].map((n) => <Btn key={n} label={n} type="num" onClick={() => handleNumber(n)} />)}
         <Btn label="×" type="op" onClick={() => handleOperation('×')} />
-        {['4', '5', '6'].map((n) =>
-        <Btn key={n} label={n} type="num" onClick={() => handleNumber(n)} />
-        )}
+        {['4', '5', '6'].map((n) => <Btn key={n} label={n} type="num" onClick={() => handleNumber(n)} />)}
         <Btn label="−" type="op" onClick={() => handleOperation('-')} />
-        {['1', '2', '3'].map((n) =>
-        <Btn key={n} label={n} type="num" onClick={() => handleNumber(n)} />
-        )}
+        {['1', '2', '3'].map((n) => <Btn key={n} label={n} type="num" onClick={() => handleNumber(n)} />)}
         <Btn label="+" type="op" onClick={() => handleOperation('+')} />
         <Btn label="±" type="num" onClick={handlePlusMinus} />
         <Btn label="0" type="num" onClick={() => handleNumber('0')} />
