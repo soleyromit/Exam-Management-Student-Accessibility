@@ -24,7 +24,7 @@ function getShortcutsForType(type: QuestionType): ShortcutDef[] {
     label: 'Next'
   },
   {
-    keys: ['F'],
+    keys: ['Z'],
     label: 'Flag'
   }];
 

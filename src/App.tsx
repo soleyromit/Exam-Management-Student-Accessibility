@@ -44,6 +44,9 @@ export function App() {
   const [showNavigator, setShowNavigator] = useState(false);
   const [showAccessibility, setShowAccessibility] = useState(false);
   const [voiceNarrator, setVoiceNarrator] = useState(false);
+  const [colorBlindMode, setColorBlindMode] = useState<
+    'none' | 'protanopia' | 'deuteranopia' | 'tritanopia' | 'achromatopsia'>(
+    'none');
   // Preferences — light theme by default
   const [theme, setTheme] = useState<'light' | 'dark' | 'high-contrast'>(
     'light'
@@ -108,6 +111,7 @@ export function App() {
 
       return;
       if (e.key === 'Enter' && currentIndex < questions.length - 1) {
+        e.preventDefault();
         handleNavigate(currentIndex + 1);
       } else if (
       e.key === 'ArrowRight' &&
@@ -116,15 +120,11 @@ export function App() {
         handleNavigate(currentIndex + 1);
       } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
         handleNavigate(currentIndex - 1);
-      } else if (e.key.toLowerCase() === 'f') {
+      } else if (e.key.toLowerCase() === 'z') {
         handleToggleFlag();
       } else if (
-      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].includes(
-        e.key.toLowerCase()
-      ) &&
-      e.key.toLowerCase() !== 'f')
+      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].includes(e.key.toLowerCase()))
       {
-        // Skip 'f' since it's used for flagging — only handle a,b,c,d,e,g,h
         const idx = e.key.toLowerCase().charCodeAt(0) - 97;
         if (currentQuestion.type === 'checkbox') {
           // Toggle checkbox option
@@ -161,11 +161,69 @@ export function App() {
     <div
       className={`h-screen w-full flex flex-col overflow-hidden transition-colors duration-300 theme-${theme}`}
       style={{
-        backgroundColor: 'var(--surface-page)'
+        backgroundColor: 'var(--surface-page)',
+        filter:
+        colorBlindMode === 'none' ?
+        undefined :
+        colorBlindMode === 'protanopia' ?
+        'url(#protanopia)' :
+        colorBlindMode === 'deuteranopia' ?
+        'url(#deuteranopia)' :
+        colorBlindMode === 'tritanopia' ?
+        'url(#tritanopia)' :
+        colorBlindMode === 'achromatopsia' ?
+        'grayscale(100%)' :
+        undefined
       }}>
       
+      {/* SVG color blindness simulation filters */}
+      <svg
+        style={{
+          position: 'absolute',
+          width: 0,
+          height: 0
+        }}
+        aria-hidden="true">
+        
+        <defs>
+          <filter id="protanopia">
+            <feColorMatrix
+              type="matrix"
+              values="0.567,0.433,0,0,0 0.558,0.442,0,0,0 0,0.242,0.758,0,0 0,0,0,1,0" />
+            
+          </filter>
+          <filter id="deuteranopia">
+            <feColorMatrix
+              type="matrix"
+              values="0.625,0.375,0,0,0 0.7,0.3,0,0,0 0,0.3,0.7,0,0 0,0,0,1,0" />
+            
+          </filter>
+          <filter id="tritanopia">
+            <feColorMatrix
+              type="matrix"
+              values="0.95,0.05,0,0,0 0,0.433,0.567,0,0 0,0.475,0.525,0,0 0,0,0,1,0" />
+            
+          </filter>
+        </defs>
+      </svg>
+      {/* Skip navigation for screen readers */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-md focus:font-heading focus:text-sm focus:font-bold"
+        style={{
+          backgroundColor: 'var(--brand-primary)',
+          color: 'var(--brand-primary-text)'
+        }}>
+        
+        Skip to question content
+      </a>
+
       <div aria-live="polite" className="sr-only">
         {announcement}
+      </div>
+      <div aria-live="assertive" className="sr-only" role="status">
+        Question {currentIndex + 1} of {questions.length}:{' '}
+        {currentQuestion.text}
       </div>
 
       <ExamToolbar
@@ -201,6 +259,8 @@ export function App() {
         isLastFiveMinutes={isLastFiveMinutes}
         voiceNarrator={voiceNarrator}
         onToggleVoiceNarrator={() => setVoiceNarrator(!voiceNarrator)}
+        colorBlindMode={colorBlindMode}
+        onColorBlindModeChange={setColorBlindMode}
         onExit={handleExit} />
       
 
@@ -224,8 +284,10 @@ export function App() {
         
 
         <main
+          id="main-content"
           className="flex-1 overflow-hidden flex flex-col p-4 md:p-6"
-          role="main">
+          role="main"
+          aria-label={`Question ${currentIndex + 1} of ${questions.length}`}>
           
           <SplitQuestionView
             key={currentIndex}

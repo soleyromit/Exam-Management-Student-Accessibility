@@ -8,8 +8,15 @@ import {
   MoonIcon,
   ContrastIcon,
   Volume2Icon,
-  LogOutIcon } from
+  EyeIcon,
+  SendIcon } from
 'lucide-react';
+export type ColorBlindMode =
+'none' |
+'protanopia' |
+'deuteranopia' |
+'tritanopia' |
+'achromatopsia';
 export interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,6 +34,9 @@ export interface SettingsPanelProps {
   zoomOut: () => void;
   voiceNarrator: boolean;
   onToggleVoiceNarrator: () => void;
+  onSubmit: () => void;
+  colorBlindMode?: ColorBlindMode;
+  onColorBlindModeChange?: (mode: ColorBlindMode) => void;
   onExit?: () => void;
 }
 export function SettingsPanel({
@@ -41,6 +51,9 @@ export function SettingsPanel({
   zoomOut,
   voiceNarrator,
   onToggleVoiceNarrator,
+  onSubmit,
+  colorBlindMode = 'none',
+  onColorBlindModeChange,
   onExit
 }: SettingsPanelProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -72,7 +85,7 @@ export function SettingsPanel({
         }}>
         
         <div
-          className="text-xs font-semibold mb-2 uppercase tracking-wider"
+          className="text-xs font-semibold mb-3 uppercase tracking-wider"
           style={{
             color: 'var(--text-muted)'
           }}>
@@ -109,13 +122,12 @@ export function SettingsPanel({
 
       {/* Tools Section */}
       <div
-        className="py-2"
         style={{
           borderBottom: '1px solid var(--border-default)'
         }}>
         
         <SettingsItem
-          icon={<CalculatorIcon size={16} />}
+          icon={<CalculatorIcon size={17} />}
           label="Calculator"
           onClick={() => {
             onToggleCalculator();
@@ -123,7 +135,7 @@ export function SettingsPanel({
           }} />
         
         <SettingsItem
-          icon={<KeyboardIcon size={16} />}
+          icon={<KeyboardIcon size={17} />}
           label="Virtual Keyboard"
           onClick={() => {
             onToggleKeyboard();
@@ -131,17 +143,17 @@ export function SettingsPanel({
           }} />
         
         <div
-          className="px-4 py-2 flex items-center justify-between transition-colors hover:bg-[var(--surface-subtle)] cursor-pointer"
+          className="px-4 py-2.5 flex items-center justify-between transition-colors hover:bg-[var(--surface-subtle)] cursor-pointer"
           onClick={onToggleVoiceNarrator}>
           
           <div
-            className="flex items-center gap-3 text-sm"
+            className="flex items-center gap-3 text-[13px] font-medium"
             style={{
               color: 'var(--text-primary)'
             }}>
             
             <Volume2Icon
-              size={16}
+              size={17}
               style={{
                 color: 'var(--text-muted)'
               }} />
@@ -166,27 +178,37 @@ export function SettingsPanel({
         </div>
       </div>
 
-      {/* View Section */}
+      {/* Accessibility Section */}
       <div
-        className="py-2"
+        className="px-4 py-3"
         style={{
           borderBottom: '1px solid var(--border-default)'
         }}>
         
         <div
-          className="flex items-center justify-between px-4 py-2 transition-colors"
+          className="text-xs font-semibold mb-3 uppercase tracking-wider"
+          style={{
+            color: 'var(--text-muted)'
+          }}>
+          
+          Accessibility
+        </div>
+
+        {/* Zoom Control */}
+        <div
+          className="flex items-center justify-between py-2.5 transition-colors"
           style={{
             cursor: 'default'
           }}>
           
-          <div className="flex items-center gap-3 text-sm">
+          <div className="flex items-center gap-3 text-[13px] font-medium">
             <ZoomInIcon
-              size={16}
+              size={17}
               style={{
                 color: 'var(--text-muted)'
               }} />
             
-            <span>Zoom</span>
+            <span>Text Size</span>
           </div>
           <div
             className="flex items-center gap-2 rounded-md"
@@ -214,7 +236,7 @@ export function SettingsPanel({
               <ZoomOutIcon size={14} />
             </button>
             <span
-              className="text-xs font-mono w-10 text-center"
+              className="text-xs font-mono w-11 text-center font-semibold"
               style={{
                 color: 'var(--text-primary)'
               }}>
@@ -241,17 +263,59 @@ export function SettingsPanel({
             </button>
           </div>
         </div>
+
+        {/* Color Vision Mode */}
+        <div
+          className="py-2.5 flex items-center justify-between"
+          style={{
+            cursor: 'default'
+          }}>
+          
+          <div
+            className="flex items-center gap-3 text-[13px] font-medium"
+            style={{
+              color: 'var(--text-primary)'
+            }}>
+            
+            <EyeIcon
+              size={17}
+              style={{
+                color: 'var(--text-muted)'
+              }} />
+            
+            <span>Color Vision</span>
+          </div>
+          <select
+            value={colorBlindMode}
+            onChange={(e) =>
+            onColorBlindModeChange?.(e.target.value as ColorBlindMode)
+            }
+            className="text-[13px] font-heading font-medium rounded-md px-3 py-1.5 exam-focus"
+            style={{
+              backgroundColor: 'var(--surface-white)',
+              border: '1px solid var(--border-medium)',
+              color: 'var(--text-primary)'
+            }}
+            aria-label="Select color vision mode">
+            
+            <option value="none">Normal</option>
+            <option value="protanopia">Protanopia</option>
+            <option value="deuteranopia">Deuteranopia</option>
+            <option value="tritanopia">Tritanopia</option>
+            <option value="achromatopsia">Monochrome</option>
+          </select>
+        </div>
       </div>
 
       {/* Keyboard Shortcuts */}
       <div
         className="px-4 py-3"
         style={{
-          borderBottom: onExit ? '1px solid var(--border-default)' : undefined
+          borderBottom: '1px solid var(--border-default)'
         }}>
         
         <div
-          className="text-xs font-semibold mb-2.5 uppercase tracking-wider"
+          className="text-xs font-semibold mb-3 uppercase tracking-wider"
           style={{
             color: 'var(--text-muted)'
           }}>
@@ -262,16 +326,14 @@ export function SettingsPanel({
           <ShortcutRow keys={['A', 'B', 'C', 'D']} label="Select answer" />
           <ShortcutRow keys={['←', '→']} label="Navigate questions" />
           <ShortcutRow keys={['Enter']} label="Next question" />
-          <ShortcutRow keys={['F']} label="Flag question" />
+          <ShortcutRow keys={['Z']} label="Flag question" />
         </div>
       </div>
 
-      {/* Exit Exam */}
-      {onExit &&
+      {/* Submit Exam */}
       <div className="px-4 py-3">
-          <ExitButton onExit={onExit} onClose={onClose} />
-        </div>
-      }
+        <SubmitButton onSubmit={onSubmit} onClose={onClose} />
+      </div>
     </div>);
 
 }
@@ -289,11 +351,11 @@ function ThemeButton({
   return (
     <button
       onClick={onClick}
-      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs font-medium transition-colors"
+      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-semibold transition-colors"
       style={{
         backgroundColor: active ? 'var(--brand-primary)' : 'transparent',
         color: active ? 'var(--brand-primary-text)' : 'var(--text-muted)',
-        boxShadow: active ? '0 1px 3px rgba(0,0,0,0.2)' : 'none'
+        boxShadow: active ? '0 1px 2px rgba(0,0,0,0.15)' : 'none'
       }}
       onMouseEnter={(e) => {
         if (!active)
@@ -324,7 +386,7 @@ function SettingsItem({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center justify-between px-4 py-2 transition-colors text-sm"
+      className="w-full flex items-center justify-between px-4 py-2.5 transition-colors text-[13px] font-medium"
       style={{
         color: 'var(--text-primary)'
       }}
@@ -348,7 +410,7 @@ function SettingsItem({
       </div>
       {shortcut &&
       <span
-        className="text-xs font-mono"
+        className="text-[10px] font-mono"
         style={{
           color: 'var(--text-muted)'
         }}>
@@ -359,42 +421,42 @@ function SettingsItem({
     </button>);
 
 }
-function ExitButton({
-  onExit,
+function SubmitButton({
+  onSubmit,
   onClose
 
 
 
-}: {onExit: () => void;onClose: () => void;}) {
+}: {onSubmit: () => void;onClose: () => void;}) {
   const [confirming, setConfirming] = useState(false);
   if (confirming) {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <p
-          className="text-xs font-heading font-medium"
+          className="text-[10px] font-heading font-medium leading-tight"
           style={{
-            color: 'var(--semantic-error-text)'
+            color: 'var(--text-primary)'
           }}>
           
-          Are you sure? Unanswered questions will not be saved.
+          Submit exam? You cannot change answers after submission.
         </p>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <button
             onClick={() => {
               onClose();
-              onExit();
+              onSubmit();
             }}
-            className="flex-1 py-2 rounded-lg text-xs font-heading font-bold transition-colors"
+            className="flex-1 py-1.5 rounded-md text-[10px] font-heading font-bold transition-colors"
             style={{
-              backgroundColor: 'var(--semantic-error-text)',
-              color: '#FFFFFF'
+              backgroundColor: 'var(--brand-primary)',
+              color: 'var(--brand-primary-text)'
             }}>
             
-            Yes, Exit
+            Yes, Submit
           </button>
           <button
             onClick={() => setConfirming(false)}
-            className="flex-1 py-2 rounded-lg border text-xs font-heading font-semibold transition-colors"
+            className="flex-1 py-1.5 rounded-md border text-[10px] font-heading font-semibold transition-colors"
             style={{
               borderColor: 'var(--border-medium)',
               color: 'var(--text-secondary)',
@@ -410,45 +472,42 @@ function ExitButton({
   return (
     <button
       onClick={() => setConfirming(true)}
-      className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border text-sm font-heading font-semibold transition-colors"
+      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-heading font-bold transition-colors shadow-sm"
       style={{
-        borderColor: 'var(--semantic-error-border)',
-        color: 'var(--semantic-error-text)',
-        backgroundColor: 'var(--semantic-error-bg)'
+        backgroundColor: 'var(--brand-primary)',
+        color: 'var(--brand-primary-text)'
       }}
       onMouseEnter={(e) => {
-        ;(e.currentTarget as HTMLElement).style.backgroundColor =
-        'var(--semantic-error-border)';
+        ;(e.currentTarget as HTMLElement).style.opacity = '0.9';
       }}
       onMouseLeave={(e) => {
-        ;(e.currentTarget as HTMLElement).style.backgroundColor =
-        'var(--semantic-error-bg)';
+        ;(e.currentTarget as HTMLElement).style.opacity = '1';
       }}>
       
-      <LogOutIcon size={15} />
-      Exit Exam
+      <SendIcon size={16} />
+      Submit Exam
     </button>);
 
 }
 function ShortcutRow({ keys, label }: {keys: string[];label: string;}) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between py-0.5">
       <span
-        className="text-xs"
+        className="text-[10px]"
         style={{
           color: 'var(--text-subtle)'
         }}>
         
         {label}
       </span>
-      <div className="flex gap-1">
+      <div className="flex gap-0.5">
         {keys.map((k, i) =>
         <kbd
           key={i}
           className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded"
           style={{
-            color: 'var(--text-muted)',
-            border: '1px solid var(--border-default)',
+            color: 'var(--text-secondary)',
+            border: '1px solid var(--border-medium)',
             backgroundColor: 'var(--surface-subtle)'
           }}>
           

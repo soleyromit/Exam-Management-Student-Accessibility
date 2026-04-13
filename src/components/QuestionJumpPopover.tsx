@@ -54,10 +54,10 @@ export function QuestionJumpPopover({
       index: i,
       question: q
     };
-    if (answeredSet.has(i)) {
-      answered.push(entry);
-    } else if (flaggedSet.has(i)) {
+    if (flaggedSet.has(i)) {
       flagged.push(entry);
+    } else if (answeredSet.has(i)) {
+      answered.push(entry);
     } else {
       unanswered.push(entry);
     }
@@ -86,81 +86,6 @@ export function QuestionJumpPopover({
         boxShadow: '0 12px 40px rgba(0,0,0,0.12)'
       }}>
       
-      {/* Legend row */}
-      <div
-        className="px-3 pt-3 pb-1 flex items-center gap-4 text-[11px] font-heading font-medium"
-        style={{
-          color: 'var(--text-secondary)'
-        }}>
-        
-        <span className="flex items-center gap-1.5">
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{
-              backgroundColor: 'var(--state-answered-border)'
-            }} />
-          
-          Answered · {answeredCount}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{
-              backgroundColor: 'var(--border-medium)'
-            }} />
-          
-          Unanswered · {unansweredCount}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{
-              backgroundColor: 'var(--state-flagged-border)'
-            }} />
-          
-          Flagged · {flaggedCount}
-        </span>
-      </div>
-
-      {/* Segmented progress bar */}
-      <div className="flex w-full px-3 pb-2.5 pt-1.5">
-        <div
-          className="flex w-full overflow-hidden"
-          style={{
-            height: '6px',
-            borderRadius: '9999px',
-            backgroundColor: 'var(--surface-subtle)'
-          }}>
-          
-          {answeredCount > 0 &&
-          <div
-            className="transition-all duration-300"
-            style={{
-              flexGrow: answeredCount,
-              backgroundColor: 'var(--state-answered-border)'
-            }} />
-
-          }
-          {unansweredCount > 0 &&
-          <div
-            style={{
-              flexGrow: unansweredCount,
-              backgroundColor: 'var(--border-medium)'
-            }} />
-
-          }
-          {flaggedCount > 0 &&
-          <div
-            className="transition-all duration-300"
-            style={{
-              flexGrow: flaggedCount,
-              backgroundColor: 'var(--state-flagged-border)'
-            }} />
-
-          }
-        </div>
-      </div>
-
       <div
         className="w-full"
         style={{
@@ -176,6 +101,40 @@ export function QuestionJumpPopover({
           maxHeight: '340px'
         }}>
         
+        {/* Flagged Section — shown first when there are flagged questions */}
+        {flaggedCount > 0 &&
+        <>
+            <SectionGroup
+            title="Flagged"
+            count={flaggedCount}
+            items={flagged}
+            isCollapsed={collapsedSections.flagged}
+            onToggle={() => toggleSection('flagged')}
+            currentIndex={currentIndex}
+            onNavigate={onNavigate}
+            onClose={onClose}
+            truncate={truncate}
+            badgeColor="var(--state-flagged-text)"
+            badgeBg="var(--state-flagged-bg)"
+            renderIcon={() =>
+            <FlagIcon
+              size={13}
+              style={{
+                color: 'var(--state-flagged-text)'
+              }} />
+
+            } />
+          
+            <div
+            className="w-full"
+            style={{
+              height: '1px',
+              backgroundColor: 'var(--border-default)'
+            }} />
+          
+          </>
+        }
+
         {/* Unanswered Section */}
         <SectionGroup
           title="Unanswered"
@@ -225,37 +184,6 @@ export function QuestionJumpPopover({
             size={14}
             style={{
               color: 'var(--state-answered-text)'
-            }} />
-
-          } />
-        
-
-        <div
-          className="w-full"
-          style={{
-            height: '1px',
-            backgroundColor: 'var(--border-default)'
-          }} />
-        
-
-        {/* Flagged Section */}
-        <SectionGroup
-          title="Flagged"
-          count={flaggedCount}
-          items={flagged}
-          isCollapsed={collapsedSections.flagged}
-          onToggle={() => toggleSection('flagged')}
-          currentIndex={currentIndex}
-          onNavigate={onNavigate}
-          onClose={onClose}
-          truncate={truncate}
-          badgeColor="var(--state-flagged-text)"
-          badgeBg="var(--state-flagged-bg)"
-          renderIcon={() =>
-          <FlagIcon
-            size={13}
-            style={{
-              color: 'var(--state-flagged-text)'
             }} />
 
           } />

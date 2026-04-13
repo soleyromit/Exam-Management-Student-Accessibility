@@ -40,6 +40,20 @@ export interface ExamToolbarProps {
   isLastFiveMinutes: boolean;
   voiceNarrator: boolean;
   onToggleVoiceNarrator: () => void;
+  colorBlindMode?:
+  'none' |
+  'protanopia' |
+  'deuteranopia' |
+  'tritanopia' |
+  'achromatopsia';
+  onColorBlindModeChange?: (
+  mode:
+  'none' |
+  'protanopia' |
+  'deuteranopia' |
+  'tritanopia' |
+  'achromatopsia')
+  => void;
   onExit?: () => void;
 }
 export function ExamToolbar({
@@ -70,12 +84,13 @@ export function ExamToolbar({
   isLastFiveMinutes,
   voiceNarrator,
   onToggleVoiceNarrator,
+  colorBlindMode,
+  onColorBlindModeChange,
   onExit
 }: ExamToolbarProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [showJumpPopover, setShowJumpPopover] = useState(false);
   const isLastQuestion = currentIndex === totalQuestions - 1;
-  const showSubmit = isLastQuestion || isLastFiveMinutes;
   const progressPercent =
   totalQuestions > 0 ? answeredCount / totalQuestions * 100 : 0;
   return (
@@ -124,6 +139,17 @@ export function ExamToolbar({
                 aria-label="Jump to a specific question">
                 
                   Q{currentIndex + 1} of {totalQuestions}
+                  {flaggedCount > 0 &&
+                <span
+                  className="flex items-center gap-1"
+                  style={{
+                    color: 'var(--state-flagged-text)'
+                  }}>
+                  
+                      · <FlagIcon size={11} fill="currentColor" />{' '}
+                      {flaggedCount}
+                    </span>
+                }
                   <ChevronDownIcon size={14} />
                 </button>
               </Tooltip>
@@ -260,22 +286,20 @@ export function ExamToolbar({
             </Tooltip>
           }
 
-          {/* Submit */}
-          {showSubmit &&
+          {/* Submit — always visible */}
           <Tooltip content="Submit your exam for grading" position="bottom">
-              <button
+            <button
               onClick={onSubmit}
               className="ml-1 px-4 py-1.5 rounded-md font-heading text-sm font-bold transition-all hover:opacity-90 exam-focus shrink-0 shadow-sm"
               style={{
                 backgroundColor: 'var(--brand-primary)',
-                color: '#FFFFFF'
+                color: 'var(--brand-primary-text)'
               }}
               aria-label="Submit exam">
               
-                Submit
-              </button>
-            </Tooltip>
-          }
+              Submit
+            </button>
+          </Tooltip>
 
           {/* Settings — last in order */}
           <div className="relative">
@@ -315,6 +339,9 @@ export function ExamToolbar({
               zoomOut={zoomOut}
               voiceNarrator={voiceNarrator}
               onToggleVoiceNarrator={onToggleVoiceNarrator}
+              onSubmit={onSubmit}
+              colorBlindMode={colorBlindMode}
+              onColorBlindModeChange={onColorBlindModeChange}
               onExit={onExit} />
             
           </div>
